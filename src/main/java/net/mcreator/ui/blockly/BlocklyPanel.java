@@ -26,14 +26,17 @@ import javafx.scene.Scene;
 import javafx.scene.paint.Color;
 import javafx.scene.web.WebEngine;
 import javafx.scene.web.WebView;
-import net.mcreator.blockly.java.BlocklyVariables;
 import net.mcreator.io.FileIO;
 import net.mcreator.io.OS;
+import net.mcreator.plugin.PluginLoader;
 import net.mcreator.preferences.PreferencesManager;
+import net.mcreator.themes.ThemeLoader;
 import net.mcreator.ui.MCreator;
 import net.mcreator.ui.component.util.ThreadUtil;
 import net.mcreator.ui.init.L10N;
 import net.mcreator.workspace.elements.VariableElement;
+import net.mcreator.workspace.elements.VariableType;
+import net.mcreator.workspace.elements.VariableTypeLoader;
 import netscape.javascript.JSObject;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -101,7 +104,15 @@ public class BlocklyPanel extends JFXPanel {
 						css += FileIO.readResourceToString("/blockly/css/mcreator_blockly_unixfix.css");
 					}
 
-					css += FileIO.readResourceToString("/blockly/css/" + UIManager.get("MCreatorLAF.BLOCKLY_CSS"));
+					if (PluginLoader.INSTANCE
+							.getResourceAsStream("themes/" + ThemeLoader.CURRENT_THEME.getID() + "/styles/blockly.css")
+							!= null) {
+						css += FileIO.readResourceToString(PluginLoader.INSTANCE,
+								"/themes/" + ThemeLoader.CURRENT_THEME.getID() + "/styles/blockly.css");
+					} else {
+						css += FileIO
+								.readResourceToString(PluginLoader.INSTANCE, "/themes/default_dark/styles/blockly.css");
+					}
 
 					//remove font declaration if property set so
 					if (PreferencesManager.PREFERENCES.blockly.legacyFont) {
@@ -127,13 +138,17 @@ public class BlocklyPanel extends JFXPanel {
 
 					webEngine.executeScript(FileIO.readResourceToString("/jsdist/blockly_compressed.js"));
 					webEngine.executeScript(FileIO.readResourceToString("/jsdist/msg/messages.js"));
-					webEngine.executeScript(FileIO.readResourceToString("/jsdist/msg/" + L10N.getLangString() + ".js", StandardCharsets.UTF_8));
+					webEngine.executeScript(FileIO.readResourceToString("/jsdist/msg/" + L10N.getLangString() + ".js",
+							StandardCharsets.UTF_8));
 					webEngine.executeScript(FileIO.readResourceToString("/jsdist/blocks_compressed.js"));
 
 					webEngine.executeScript(FileIO.readResourceToString("/blockly/js/block_mcitem.js"));
 					webEngine.executeScript(FileIO.readResourceToString("/blockly/js/field_ai_condition.js"));
 					webEngine.executeScript(FileIO.readResourceToString("/blockly/js/mcreator_blocks.js"));
 					webEngine.executeScript(FileIO.readResourceToString("/blockly/js/mcreator_blockly.js"));
+
+					//JS code generation for custom variables
+					webEngine.executeScript(VariableTypeLoader.INSTANCE.getVariableBlocklyJS());
 
 					// Make the webpage transparent
 					try {
@@ -212,13 +227,16 @@ public class BlocklyPanel extends JFXPanel {
 			return retval;
 
 		String[] vars = query.split(":");
-		for (String var : vars) {
-			String[] vardata = var.split(";");
+		for (String varNameType : vars) {
+			String[] vardata = varNameType.split(";");
 			if (vardata.length == 2) {
 				VariableElement element = new VariableElement();
 				element.setName(vardata[0]);
-				element.setType(BlocklyVariables.getMCreatorVariableTypeFromBlocklyVariableType(vardata[1]));
-				retval.add(element);
+				VariableType variableType = VariableTypeLoader.INSTANCE.getVariableTypeFromString(vardata[1]);
+				if (variableType != null) {
+					element.setType(variableType);
+					retval.add(element);
+				}
 			}
 		}
 		return retval;
