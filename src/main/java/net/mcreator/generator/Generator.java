@@ -229,7 +229,7 @@ public class Generator implements IGenerator, Closeable {
 				.getModElementDefinition(element.getModElement().getType()); // config map
 		if (map == null) {
 			LOG.warn("Failed to load element definition for mod element type " + element.getModElement().getType()
-					.name());
+					.getRegistryName());
 			return Collections.emptyList();
 		}
 
@@ -313,7 +313,7 @@ public class Generator implements IGenerator, Closeable {
 		Map<?, ?> map = generatorConfiguration.getDefinitionsProvider().getModElementDefinition(element.getType());
 
 		if (map == null) {
-			LOG.warn("Failed to load element definition for mod element type " + element.getType().name());
+			LOG.warn("Failed to load element definition for mod element type " + element.getType().getRegistryName());
 			return;
 		}
 
@@ -366,7 +366,7 @@ public class Generator implements IGenerator, Closeable {
 		Map<?, ?> map = generatorConfiguration.getDefinitionsProvider().getModElementDefinition(element.getType());
 
 		if (map == null) {
-			LOG.info("Failed to load element definition for mod element type " + element.getType().name());
+			LOG.info("Failed to load element definition for mod element type " + element.getType().getRegistryName());
 			return null;
 		}
 
@@ -613,7 +613,7 @@ public class Generator implements IGenerator, Closeable {
 	}
 
 	public void loadOrCreateGradleCaches() throws GradleCacheImportFailedException {
-		File cacheFile = new File(workspace.getFolderManager().getWorkspaceCacheDir(), "gradleCache");
+		File cacheFile = new File(workspace.getFolderManager().getWorkspaceCacheDir(), "generatorGradleCache");
 		if (cacheFile.isFile()) {
 			String cache = FileIO.readFileToString(cacheFile);
 			generatorGradleCache = new GsonBuilder().disableHtmlEscaping().create()
@@ -638,7 +638,8 @@ public class Generator implements IGenerator, Closeable {
 
 		this.generatorGradleCache = new GeneratorGradleCache(this);
 		String cache = new GsonBuilder().disableHtmlEscaping().create().toJson(generatorGradleCache);
-		FileIO.writeStringToFile(cache, new File(workspace.getFolderManager().getWorkspaceCacheDir(), "gradleCache"));
+		FileIO.writeStringToFile(cache,
+				new File(workspace.getFolderManager().getWorkspaceCacheDir(), "generatorGradleCache"));
 	}
 
 	public GeneratorGradleCache getGradleCache() {

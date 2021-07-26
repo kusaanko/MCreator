@@ -20,12 +20,14 @@ package net.mcreator.integration;
 
 import net.mcreator.Launcher;
 import net.mcreator.blockly.data.BlocklyLoader;
+import net.mcreator.element.ModElementTypeLoader;
 import net.mcreator.generator.Generator;
 import net.mcreator.generator.GeneratorConfiguration;
 import net.mcreator.minecraft.DataListLoader;
 import net.mcreator.minecraft.api.ModAPIManager;
 import net.mcreator.plugin.PluginLoader;
 import net.mcreator.themes.ThemeLoader;
+import net.mcreator.ui.MCreatorApplication;
 import net.mcreator.ui.blockly.WebConsoleListener;
 import net.mcreator.ui.init.EntityAnimationsLoader;
 import net.mcreator.ui.init.L10N;
@@ -56,8 +58,9 @@ public class TestSetup {
 
 		WebConsoleListener.registerLogger(LOG);
 
+		MCreatorApplication.isInternet = MCreatorApplication.WEB_API.initAPI();
+
 		// print version of Java
-		String java_spec_version = System.getProperty("java.specification.version");
 		LOG.info("Java version: " + System.getProperty("java.version") + ", VM: " + System.getProperty("java.vm.name")
 				+ ", vendor: " + System.getProperty("java.vendor"));
 		LOG.info("Current JAVA_HOME for running instance: " + System.getProperty("java.home"));
@@ -100,6 +103,9 @@ public class TestSetup {
 
 		// load entity animations for the Java Model animation editor
 		EntityAnimationsLoader.init();
+
+		// register mod element types
+		ModElementTypeLoader.loadModElements();
 
 		// load generator configurations
 		Set<String> fileNames = PluginLoader.INSTANCE.getResources(Pattern.compile("generator\\.yaml"));

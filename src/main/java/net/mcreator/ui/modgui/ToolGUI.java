@@ -36,8 +36,8 @@ import net.mcreator.ui.laf.renderer.ItemTexturesComboBoxRenderer;
 import net.mcreator.ui.laf.renderer.ModelComboBoxRenderer;
 import net.mcreator.ui.minecraft.DataListComboBox;
 import net.mcreator.ui.minecraft.MCItemListField;
-import net.mcreator.ui.minecraft.ProcedureSelector;
 import net.mcreator.ui.minecraft.TextureHolder;
+import net.mcreator.ui.procedure.ProcedureSelector;
 import net.mcreator.ui.validation.AggregatedValidationResult;
 import net.mcreator.ui.validation.ValidationGroup;
 import net.mcreator.ui.validation.component.VTextField;
@@ -72,7 +72,8 @@ public class ToolGUI extends ModElementGUI<Tool> {
 	private final VTextField name = new VTextField(28);
 
 	private final JComboBox<String> toolType = new JComboBox<>(
-			new String[] { "Pickaxe", "Axe", "Sword", "Spade", "Hoe", "Shears", "Special", "MultiTool" });
+			new String[] { "Pickaxe", "Axe", "Sword", "Spade", "Hoe", "Shears", "Fishing rod", "Special",
+					"MultiTool" });
 
 	private final JCheckBox immuneToFire = L10N.checkbox("elementgui.common.enable");
 	private final JCheckBox stayInGridWhenCrafting = L10N.checkbox("elementgui.common.enable");
@@ -118,11 +119,13 @@ public class ToolGUI extends ModElementGUI<Tool> {
 				L10N.t("elementgui.common.event_on_crafted"),
 				Dependency.fromString("x:number/y:number/z:number/world:world/entity:entity/itemstack:itemstack"));
 		onRightClickedOnBlock = new ProcedureSelector(this.withEntry("item/when_right_clicked_block"), mcreator,
-				L10N.t("elementgui.common.event_right_clicked_block"), Dependency.fromString(
-				"x:number/y:number/z:number/world:world/entity:entity/itemstack:itemstack/direction:direction"));
+				L10N.t("elementgui.common.event_right_clicked_block"), VariableTypeLoader.BuiltInTypes.ACTIONRESULTTYPE,
+				Dependency.fromString(
+						"x:number/y:number/z:number/world:world/entity:entity/itemstack:itemstack/direction:direction/blockstate:blockstate"))
+				.makeReturnValueOptional();
 		onBlockDestroyedWithTool = new ProcedureSelector(this.withEntry("tool/when_block_destroyed"), mcreator,
-				L10N.t("elementgui.tool.event_block_destroyed"),
-				Dependency.fromString("x:number/y:number/z:number/world:world/entity:entity/itemstack:itemstack"));
+				L10N.t("elementgui.tool.event_block_destroyed"), Dependency.fromString(
+				"x:number/y:number/z:number/world:world/entity:entity/itemstack:itemstack/blockstate:blockstate"));
 		onEntityHitWith = new ProcedureSelector(this.withEntry("item/when_entity_hit"), mcreator,
 				L10N.t("elementgui.tool.event_entity_hit_with"), Dependency.fromString(
 				"x:number/y:number/z:number/world:world/entity:entity/sourceentity:entity/itemstack:itemstack"));
@@ -140,7 +143,8 @@ public class ToolGUI extends ModElementGUI<Tool> {
 				Dependency.fromString("x:number/y:number/z:number/world:world/entity:entity/itemstack:itemstack"));
 		glowCondition = new ProcedureSelector(this.withEntry("item/condition_glow"), mcreator, "Make item glow",
 				ProcedureSelector.Side.CLIENT, true, VariableTypeLoader.BuiltInTypes.LOGIC,
-				Dependency.fromString("x:number/y:number/z:number/world:world/entity:entity/itemstack:itemstack"));
+				Dependency.fromString("x:number/y:number/z:number/world:world/entity:entity/itemstack:itemstack"))
+				.makeInline();
 
 		blocksAffected = new MCItemListField(mcreator, ElementUtil::loadBlocks);
 
@@ -211,18 +215,18 @@ public class ToolGUI extends ModElementGUI<Tool> {
 		harvestLevel.setOpaque(false);
 		efficiency.setOpaque(false);
 
+		hasGlow.addActionListener(e -> updateGlowElements());
+
 		selp.add(HelpUtils
 				.wrapWithHelpButton(this.withEntry("common/gui_name"), L10N.label("elementgui.common.name_in_gui")));
 		selp.add(name);
 
+		selp.add(HelpUtils.wrapWithHelpButton(this.withEntry("tool/type"), L10N.label("elementgui.tool.type")));
+		selp.add(toolType);
+
 		selp.add(HelpUtils.wrapWithHelpButton(this.withEntry("common/creative_tab"),
 				L10N.label("elementgui.common.creative_tab")));
 		selp.add(creativeTab);
-
-		hasGlow.addActionListener(e -> updateGlowElements());
-
-		selp.add(HelpUtils.wrapWithHelpButton(this.withEntry("tool/type"), L10N.label("elementgui.tool.type")));
-		selp.add(toolType);
 
 		selp.add(HelpUtils
 				.wrapWithHelpButton(this.withEntry("tool/harvest_level"), L10N.label("elementgui.tool.harvest_level")));
@@ -270,10 +274,7 @@ public class ToolGUI extends ModElementGUI<Tool> {
 
 		blocksAffected.setEnabled(false);
 
-		toolType.addActionListener(event -> {
-			if (toolType.getSelectedItem() != null)
-				blocksAffected.setEnabled(toolType.getSelectedItem().equals("Special"));
-		});
+		toolType.addActionListener(event -> updateFields());
 
 		pane4.setOpaque(false);
 
@@ -308,6 +309,36 @@ public class ToolGUI extends ModElementGUI<Tool> {
 		if (!isEditingMode()) {
 			String readableNameFromModElement = StringUtils.machineToReadableName(modElement.getName());
 			name.setText(readableNameFromModElement);
+		}
+	}
+
+	private void updateFields() {
+		if (toolType.getSelectedItem() != null) {
+			harvestLevel.setEnabled(true);
+			efficiency.setEnabled(true);
+			damageVsEntity.setEnabled(true);
+			attackSpeed.setEnabled(true);
+			blocksAffected.setEnabled(true);
+			repairItems.setEnabled(true);
+
+			if (toolType.getSelectedItem().equals("Special")) {
+				harvestLevel.setEnabled(false);
+				repairItems.setEnabled(false);
+			} else if (toolType.getSelectedItem().equals("Fishing rod")) {
+				harvestLevel.setEnabled(false);
+				efficiency.setEnabled(false);
+				damageVsEntity.setEnabled(false);
+				attackSpeed.setEnabled(false);
+				blocksAffected.setEnabled(false);
+			} else if (toolType.getSelectedItem().equals("Shears")) {
+				harvestLevel.setEnabled(false);
+				damageVsEntity.setEnabled(false);
+				attackSpeed.setEnabled(false);
+				blocksAffected.setEnabled(false);
+				repairItems.setEnabled(false);
+			} else {
+				blocksAffected.setEnabled(false);
+			}
 		}
 	}
 
@@ -377,6 +408,7 @@ public class ToolGUI extends ModElementGUI<Tool> {
 		blocksAffected.setListElements(tool.blocksAffected);
 
 		updateGlowElements();
+		updateFields();
 
 		if (toolType.getSelectedItem() != null)
 			blocksAffected.setEnabled(toolType.getSelectedItem().equals("Special"));

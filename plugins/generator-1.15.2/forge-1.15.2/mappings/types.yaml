@@ -2,6 +2,7 @@ _default: Object
 number: double
 string: String
 logic: boolean
+blockstate: BlockState
 itemstack: ItemStack
 direction: Direction
 world: IWorld
@@ -9,3 +10,4 @@ entity: Entity
 map: HashMap
 advancement: Advancement
 dimensiontype: int
+actionresulttype: ActionResultType
