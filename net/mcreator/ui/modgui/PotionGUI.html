@@ -26,7 +26,7 @@
     catch(err) {
     }
 //-->
-var data = {"i0":10,"i1":10,"i2":10,"i3":10,"i4":10,"i5":10};
+var data = {"i0":10,"i1":10,"i2":10,"i3":10};
 var tabs = {65535:["t0","All Methods"],2:["t2","Instance Methods"],8:["t4","Concrete Methods"]};
 var altColor = "altColor";
 var rowColor = "rowColor";
@@ -311,33 +311,23 @@ extends <a href="ModElementGUI.html" title="class in net.mcreator.ui.modgui">Mod
 <th class="colLast" scope="col">Description</th>
 </tr>
 <tr id="i0" class="altColor">
-<td class="colFirst"><code>java.net.URI</code></td>
-<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#getContextURL()">getContextURL</a></span>()</code></th>
-<td class="colLast">&nbsp;</td>
-</tr>
-<tr id="i1" class="rowColor">
 <td class="colFirst"><code><a href="../../element/types/Potion.html" title="class in net.mcreator.element.types">Potion</a></code></td>
 <th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#getElementFromGUI()">getElementFromGUI</a></span>()</code></th>
 <td class="colLast">&nbsp;</td>
 </tr>
-<tr id="i2" class="altColor">
+<tr id="i1" class="rowColor">
 <td class="colFirst"><code>protected void</code></td>
 <th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#initGUI()">initGUI</a></span>()</code></th>
 <td class="colLast">&nbsp;</td>
 </tr>
-<tr id="i3" class="rowColor">
-<td class="colFirst"><code>void</code></td>
+<tr id="i2" class="altColor">
+<td class="colFirst"><code>protected void</code></td>
 <th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#openInEditingMode(net.mcreator.element.types.Potion)">openInEditingMode</a></span>&#8203;(<a href="../../element/types/Potion.html" title="class in net.mcreator.element.types">Potion</a>&nbsp;potion)</code></th>
 <td class="colLast">
 <div class="block">This method is called to open a mod element in the GUI</div>
 </td>
 </tr>
-<tr id="i4" class="altColor">
-<td class="colFirst"><code>void</code></td>
-<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#reloadDataLists()">reloadDataLists</a></span>()</code></th>
-<td class="colLast">&nbsp;</td>
-</tr>
-<tr id="i5" class="rowColor">
+<tr id="i3" class="rowColor">
 <td class="colFirst"><code>protected <a href="../validation/AggregatedValidationResult.html" title="class in net.mcreator.ui.validation">AggregatedValidationResult</a></code></td>
 <th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#validatePage(int)">validatePage</a></span>&#8203;(int&nbsp;page)</code></th>
 <td class="colLast">&nbsp;</td>
@@ -348,7 +338,7 @@ extends <a href="ModElementGUI.html" title="class in net.mcreator.ui.modgui">Mod
 <!--   -->
 </a>
 <h3>Methods inherited from class&nbsp;net.mcreator.ui.modgui.<a href="ModElementGUI.html" title="class in net.mcreator.ui.modgui">ModElementGUI</a></h3>
-<code><a href="ModElementGUI.html#addPage(java.lang.String,javax.swing.JComponent)">addPage</a>, <a href="ModElementGUI.html#addPage(javax.swing.JComponent)">addPage</a>, <a href="ModElementGUI.html#afterGeneratableElementStored()">afterGeneratableElementStored</a>, <a href="ModElementGUI.html#beforeGeneratableElementGenerated()">beforeGeneratableElementGenerated</a>, <a href="ModElementGUI.html#finalizeGUI()">finalizeGUI</a>, <a href="ModElementGUI.html#finalizeGUI(boolean)">finalizeGUI</a>, <a href="ModElementGUI.html#getContextName()">getContextName</a>, <a href="ModElementGUI.html#getModElement()">getModElement</a>, <a href="ModElementGUI.html#getViewIcon()">getViewIcon</a>, <a href="ModElementGUI.html#getViewName()">getViewName</a>, <a href="ModElementGUI.html#isEditingMode()">isEditingMode</a>, <a href="ModElementGUI.html#setModElementCreatedListener(net.mcreator.ui.modgui.ModElementGUI.ModElementCreatedListener)">setModElementCreatedListener</a>, <a href="ModElementGUI.html#showView()">showView</a></code></li>
+<code><a href="ModElementGUI.html#addPage(java.lang.String,javax.swing.JComponent)">addPage</a>, <a href="ModElementGUI.html#addPage(javax.swing.JComponent)">addPage</a>, <a href="ModElementGUI.html#afterGeneratableElementStored()">afterGeneratableElementStored</a>, <a href="ModElementGUI.html#beforeGeneratableElementGenerated()">beforeGeneratableElementGenerated</a>, <a href="ModElementGUI.html#finalizeGUI()">finalizeGUI</a>, <a href="ModElementGUI.html#finalizeGUI(boolean)">finalizeGUI</a>, <a href="ModElementGUI.html#getContextName()">getContextName</a>, <a href="ModElementGUI.html#getModElement()">getModElement</a>, <a href="ModElementGUI.html#getViewIcon()">getViewIcon</a>, <a href="ModElementGUI.html#getViewName()">getViewName</a>, <a href="ModElementGUI.html#isEditingMode()">isEditingMode</a>, <a href="ModElementGUI.html#reloadDataLists()">reloadDataLists</a>, <a href="ModElementGUI.html#setModElementCreatedListener(net.mcreator.ui.modgui.ModElementGUI.ModElementCreatedListener)">setModElementCreatedListener</a>, <a href="ModElementGUI.html#showView()">showView</a></code></li>
 </ul>
 <ul class="blockList">
 <li class="blockList"><a id="methods.inherited.from.class.net.mcreator.ui.views.ViewBase">
@@ -397,7 +387,7 @@ extends <a href="ModElementGUI.html" title="class in net.mcreator.ui.modgui">Mod
 <!--   -->
 </a>
 <h3>Methods inherited from interface&nbsp;net.mcreator.ui.help.<a href="../help/IHelpContext.html" title="interface in net.mcreator.ui.help">IHelpContext</a></h3>
-<code><a href="../help/IHelpContext.html#getEntry()">getEntry</a>, <a href="../help/IHelpContext.html#withEntry(java.lang.String)">withEntry</a></code></li>
+<code><a href="../help/IHelpContext.html#getArguments()">getArguments</a>, <a href="../help/IHelpContext.html#getContextURL()">getContextURL</a>, <a href="../help/IHelpContext.html#getEntry()">getEntry</a>, <a href="../help/IHelpContext.html#withArguments(java.util.function.Supplier...)">withArguments</a>, <a href="../help/IHelpContext.html#withEntry(java.lang.String)">withEntry</a></code></li>
 </ul>
 </li>
 </ul>
@@ -422,6 +412,7 @@ extends <a href="ModElementGUI.html" title="class in net.mcreator.ui.modgui">Mod
 <li class="blockList">
 <h4>PotionGUI</h4>
 <pre>public&nbsp;PotionGUI&#8203;(<a href="../MCreator.html" title="class in net.mcreator.ui">MCreator</a>&nbsp;mcreator,
+                 @Nonnull
                  <a href="../../workspace/elements/ModElement.html" title="class in net.mcreator.workspace.elements">ModElement</a>&nbsp;modElement,
                  boolean&nbsp;editingMode)</pre>
 </li>
@@ -449,19 +440,6 @@ extends <a href="ModElementGUI.html" title="class in net.mcreator.ui.modgui">Mod
 </dl>
 </li>
 </ul>
-<a id="reloadDataLists()">
-<!--   -->
-</a>
-<ul class="blockList">
-<li class="blockList">
-<h4>reloadDataLists</h4>
-<pre class="methodSignature">public&nbsp;void&nbsp;reloadDataLists()</pre>
-<dl>
-<dt><span class="overrideSpecifyLabel">Overrides:</span></dt>
-<dd><code><a href="ModElementGUI.html#reloadDataLists()">reloadDataLists</a></code>&nbsp;in class&nbsp;<code><a href="ModElementGUI.html" title="class in net.mcreator.ui.modgui">ModElementGUI</a>&lt;<a href="../../element/types/Potion.html" title="class in net.mcreator.element.types">Potion</a>&gt;</code></dd>
-</dl>
-</li>
-</ul>
 <a id="validatePage(int)">
 <!--   -->
 </a>
@@ -481,7 +459,7 @@ extends <a href="ModElementGUI.html" title="class in net.mcreator.ui.modgui">Mod
 <ul class="blockList">
 <li class="blockList">
 <h4>openInEditingMode</h4>
-<pre class="methodSignature">public&nbsp;void&nbsp;openInEditingMode&#8203;(<a href="../../element/types/Potion.html" title="class in net.mcreator.element.types">Potion</a>&nbsp;potion)</pre>
+<pre class="methodSignature">protected&nbsp;void&nbsp;openInEditingMode&#8203;(<a href="../../element/types/Potion.html" title="class in net.mcreator.element.types">Potion</a>&nbsp;potion)</pre>
 <div class="block"><span class="descfrmTypeLabel">Description copied from class:&nbsp;<code><a href="ModElementGUI.html#openInEditingMode(GE)">ModElementGUI</a></code></span></div>
 <div class="block">This method is called to open a mod element in the GUI</div>
 <dl>
@@ -493,28 +471,13 @@ extends <a href="ModElementGUI.html" title="class in net.mcreator.ui.modgui">Mod
 <a id="getElementFromGUI()">
 <!--   -->
 </a>
-<ul class="blockList">
+<ul class="blockListLast">
 <li class="blockList">
 <h4>getElementFromGUI</h4>
 <pre class="methodSignature">public&nbsp;<a href="../../element/types/Potion.html" title="class in net.mcreator.element.types">Potion</a>&nbsp;getElementFromGUI()</pre>
 <dl>
 <dt><span class="overrideSpecifyLabel">Specified by:</span></dt>
 <dd><code><a href="ModElementGUI.html#getElementFromGUI()">getElementFromGUI</a></code>&nbsp;in class&nbsp;<code><a href="ModElementGUI.html" title="class in net.mcreator.ui.modgui">ModElementGUI</a>&lt;<a href="../../element/types/Potion.html" title="class in net.mcreator.element.types">Potion</a>&gt;</code></dd>
-</dl>
-</li>
-</ul>
-<a id="getContextURL()">
-<!--   -->
-</a>
-<ul class="blockListLast">
-<li class="blockList">
-<h4>getContextURL</h4>
-<pre class="methodSignature">@Nullable
-public&nbsp;java.net.URI&nbsp;getContextURL()
-                           throws java.net.URISyntaxException</pre>
-<dl>
-<dt><span class="throwsLabel">Throws:</span></dt>
-<dd><code>java.net.URISyntaxException</code></dd>
 </dl>
 </li>
 </ul>

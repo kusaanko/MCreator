@@ -19,6 +19,8 @@ net.mcreator.element.converter.fv18
 net.mcreator.element.converter.fv19
 net.mcreator.element.converter.fv20
 net.mcreator.element.converter.fv21
+net.mcreator.element.converter.fv22
+net.mcreator.element.converter.fv23
 net.mcreator.element.converter.fv4
 net.mcreator.element.converter.fv5
 net.mcreator.element.converter.fv6
@@ -82,9 +84,12 @@ net.mcreator.ui.ide.mcfunction
 net.mcreator.ui.init
 net.mcreator.ui.laf
 net.mcreator.ui.laf.renderer
+net.mcreator.ui.laf.renderer.elementlist
 net.mcreator.ui.minecraft
+net.mcreator.ui.minecraft.potions
 net.mcreator.ui.minecraft.spawntypes
 net.mcreator.ui.modgui
+net.mcreator.ui.procedure
 net.mcreator.ui.validation
 net.mcreator.ui.validation.component
 net.mcreator.ui.validation.optionpane
