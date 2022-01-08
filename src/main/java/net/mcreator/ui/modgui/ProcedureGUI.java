@@ -18,7 +18,6 @@
 
 package net.mcreator.ui.modgui;
 
-import net.mcreator.blockly.BlocklyBlockUtil;
 import net.mcreator.blockly.BlocklyCompileNote;
 import net.mcreator.blockly.data.*;
 import net.mcreator.blockly.java.BlocklyToProcedure;
@@ -150,8 +149,7 @@ public class ProcedureGUI extends ModElementGUI<net.mcreator.element.types.Proce
 			if (blocklyToJava.getReturnType() != null) {
 				returnType.setVisible(true);
 				returnTypeLabel.setText(blocklyToJava.getReturnType().getName().toUpperCase());
-				returnTypeLabel.setForeground(
-						BlocklyBlockUtil.getBlockColorFromHUE(blocklyToJava.getReturnType().getColor()).brighter());
+				returnTypeLabel.setForeground(blocklyToJava.getReturnType().getBlocklyColor().brighter());
 			} else {
 				returnType.setVisible(false);
 			}
@@ -176,8 +174,8 @@ public class ProcedureGUI extends ModElementGUI<net.mcreator.element.types.Proce
 					StringBuilder missingdeps = new StringBuilder();
 					boolean warn = false;
 					for (Dependency dependency : dependenciesArrayList) {
-						if (trigger.dependencies_provided != null && !trigger.dependencies_provided
-								.contains(dependency)) {
+						if (trigger.dependencies_provided != null && !trigger.dependencies_provided.contains(
+								dependency)) {
 							warn = true;
 							missingdeps.append(" ").append(dependency.getName());
 						}
@@ -274,12 +272,10 @@ public class ProcedureGUI extends ModElementGUI<net.mcreator.element.types.Proce
 				int index, boolean isSelected, boolean cellHasFocus) {
 			setOpaque(isSelected);
 			setBorder(null);
-			setBackground(isSelected ?
-					BlocklyBlockUtil.getBlockColorFromHUE(value.getType().getColor()) :
-					(Color) UIManager.get("MCreatorLAF.DARK_ACCENT"));
-			setForeground(isSelected ?
-					(Color) UIManager.get("MCreatorLAF.BRIGHT_COLOR") :
-					BlocklyBlockUtil.getBlockColorFromHUE(value.getType().getColor()));
+			setBackground(
+					isSelected ? value.getType().getBlocklyColor() : (Color) UIManager.get("MCreatorLAF.DARK_ACCENT"));
+			setForeground(
+					isSelected ? (Color) UIManager.get("MCreatorLAF.BRIGHT_COLOR") : value.getType().getBlocklyColor());
 			ComponentUtils.deriveFont(this, 14);
 			setText(value.getName());
 			return this;
@@ -380,8 +376,8 @@ public class ProcedureGUI extends ModElementGUI<net.mcreator.element.types.Proce
 		bar.add(remvar);
 
 		addvar.addActionListener(e -> {
-			VariableElement element = NewVariableDialog
-					.showNewVariableDialog(mcreator, false, new OptionPaneValidatior() {
+			VariableElement element = NewVariableDialog.showNewVariableDialog(mcreator, false,
+					new OptionPaneValidatior() {
 						@Override public Validator.ValidationResult validate(JComponent component) {
 							Validator validator = new JavaMemeberNameValidator((VTextField) component, false);
 							String textname = Transliteration.transliterateString(((VTextField) component).getText());
@@ -531,8 +527,8 @@ public class ProcedureGUI extends ModElementGUI<net.mcreator.element.types.Proce
 		scrollPaneExtDeps.getHorizontalScrollBar().setPreferredSize(new Dimension(0, 8));
 		scrollPaneExtDeps.setBorder(BorderFactory.createEmptyBorder(0, 5, 0, 0));
 
-		triggerDepsPan.add("Center", PanelUtils.northAndCenterElement(triggerInfoPanel, PanelUtils
-				.northAndCenterElement(
+		triggerDepsPan.add("Center", PanelUtils.northAndCenterElement(triggerInfoPanel,
+				PanelUtils.northAndCenterElement(
 						ComponentUtils.deriveFont(L10N.label("elementgui.procedure.provided_dependencies"), 13),
 						scrollPaneExtDeps, 0, 1), 0, 4));
 		triggerDepsPan.setPreferredSize(new Dimension(150, 0));
@@ -565,8 +561,8 @@ public class ProcedureGUI extends ModElementGUI<net.mcreator.element.types.Proce
 			}
 			blocklyPanel.getJSBridge().setJavaScriptEventListener(() -> new Thread(this::regenerateProcedure).start());
 			if (!isEditingMode()) {
-				blocklyPanel
-						.setXML("<xml><block type=\"event_trigger\" deletable=\"false\" x=\"40\" y=\"40\"></block></xml>");
+				blocklyPanel.setXML(
+						"<xml><block type=\"event_trigger\" deletable=\"false\" x=\"40\" y=\"40\"></block></xml>");
 			}
 		});
 
@@ -594,12 +590,12 @@ public class ProcedureGUI extends ModElementGUI<net.mcreator.element.types.Proce
 
 	}
 
-	@Override protected void afterGeneratableElementStored() {
-		super.afterGeneratableElementStored();
+	@Override protected void afterGeneratableElementGenerated() {
+		super.afterGeneratableElementGenerated();
 
 		// check if dependency list has changed
-		boolean dependenciesChanged = dependenciesBeforeEdit != null && !new HashSet<>(dependenciesBeforeEdit)
-				.equals(new HashSet<>(dependenciesArrayList));
+		boolean dependenciesChanged = dependenciesBeforeEdit != null && !new HashSet<>(dependenciesBeforeEdit).equals(
+				new HashSet<>(dependenciesArrayList));
 
 		// this procedure could be in use and new dependencies were added
 		if (isEditingMode() && dependenciesChanged) {
@@ -626,6 +622,8 @@ public class ProcedureGUI extends ModElementGUI<net.mcreator.element.types.Proce
 				}
 			}
 		}
+
+		dependenciesBeforeEdit = dependenciesArrayList;
 	}
 
 	@Override public void openInEditingMode(net.mcreator.element.types.Procedure procedure) {

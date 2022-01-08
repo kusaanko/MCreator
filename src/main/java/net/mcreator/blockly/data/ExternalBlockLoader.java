@@ -25,8 +25,8 @@ import net.mcreator.plugin.PluginLoader;
 import net.mcreator.preferences.PreferencesManager;
 import net.mcreator.ui.blockly.BlocklyPanel;
 import net.mcreator.ui.init.L10N;
+import net.mcreator.util.FilenameUtilsPatched;
 import net.mcreator.util.Tuple;
-import org.apache.commons.io.FilenameUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -60,23 +60,22 @@ public class ExternalBlockLoader {
 		Set<String> fileNames = PluginLoader.INSTANCE.getResources(resourceFolder, blockFormat);
 		for (String procedureBlock : fileNames) {
 			try {
-				JsonObject jsonresult = JsonParser
-						.parseString(FileIO.readResourceToString(PluginLoader.INSTANCE, procedureBlock))
-						.getAsJsonObject();
+				JsonObject jsonresult = JsonParser.parseString(
+						FileIO.readResourceToString(PluginLoader.INSTANCE, procedureBlock)).getAsJsonObject();
 				JsonElement blockMCreatorDefinition = jsonresult.get("mcreator");
 
 				ToolboxBlock toolboxBlock = gson.fromJson(blockMCreatorDefinition, ToolboxBlock.class);
 				if (toolboxBlock != null) {
-					toolboxBlock.machine_name = FilenameUtils.getBaseName(procedureBlock);
+					toolboxBlock.machine_name = FilenameUtilsPatched.getBaseName(procedureBlock);
 
 					String localized_message = L10N.t("blockly.block." + toolboxBlock.machine_name);
 					String localized_message_en = L10N.t_en("blockly.block." + toolboxBlock.machine_name);
 
 					if (localized_message != null) {
-						int parameters_count = net.mcreator.util.StringUtils
-								.countRegexMatches(localized_message, "%[0-9]+");
-						int parameters_count_en = net.mcreator.util.StringUtils
-								.countRegexMatches(localized_message_en, "%[0-9]+");
+						int parameters_count = net.mcreator.util.StringUtils.countRegexMatches(localized_message,
+								"%[0-9]+");
+						int parameters_count_en = net.mcreator.util.StringUtils.countRegexMatches(localized_message_en,
+								"%[0-9]+");
 
 						if (parameters_count == parameters_count_en) {
 							jsonresult.add("message0", new JsonPrimitive(localized_message));
@@ -111,10 +110,9 @@ public class ExternalBlockLoader {
 
 		fileNames = PluginLoader.INSTANCE.getResources(resourceFolder, categoryFormat);
 		for (String toolboxCategoryName : fileNames) {
-			ToolboxCategory toolboxCategory = gson
-					.fromJson(FileIO.readResourceToString(PluginLoader.INSTANCE, toolboxCategoryName),
-							ToolboxCategory.class);
-			toolboxCategory.id = FilenameUtils.getBaseName(toolboxCategoryName).replace("$", "");
+			ToolboxCategory toolboxCategory = gson.fromJson(
+					FileIO.readResourceToString(PluginLoader.INSTANCE, toolboxCategoryName), ToolboxCategory.class);
+			toolboxCategory.id = FilenameUtilsPatched.getBaseName(toolboxCategoryName).replace("$", "");
 			toolboxCategories.add(toolboxCategory);
 		}
 
@@ -137,8 +135,8 @@ public class ExternalBlockLoader {
 
 		// and then sort them for toolbox display
 		if (PreferencesManager.PREFERENCES.blockly.useSmartSort) {
-			toolboxBlocksList
-					.sort(Comparator.comparing(ToolboxBlock::getGroupEstimate).thenComparing(ToolboxBlock::getName));
+			toolboxBlocksList.sort(
+					Comparator.comparing(ToolboxBlock::getGroupEstimate).thenComparing(ToolboxBlock::getName));
 		} else {
 			toolboxBlocksList.sort(Comparator.comparing(ToolboxBlock::getName));
 		}
@@ -155,6 +153,7 @@ public class ExternalBlockLoader {
 		toolbox.put("logicoperations", new ArrayList<>());
 		toolbox.put("math", new ArrayList<>());
 		toolbox.put("text", new ArrayList<>());
+		toolbox.put("time", new ArrayList<>());
 		toolbox.put("advanced", new ArrayList<>());
 
 		// Handle built-in categories
@@ -211,8 +210,8 @@ public class ExternalBlockLoader {
 	public void loadBlocksAndCategoriesInPanel(BlocklyPanel pane, ToolboxType toolboxType) {
 		pane.executeJavaScriptSynchronously("Blockly.defineBlocksWithJsonArray(" + blocksJSONString + ")");
 
-		String toolbox_xml = FileIO
-				.readResourceToString("/blockly/toolbox_" + toolboxType.name().toLowerCase(Locale.ENGLISH) + ".xml");
+		String toolbox_xml = FileIO.readResourceToString(
+				"/blockly/toolbox_" + toolboxType.name().toLowerCase(Locale.ENGLISH) + ".xml");
 
 		Matcher m = translationsMatcher.matcher(toolbox_xml);
 		while (m.find()) {
@@ -224,11 +223,11 @@ public class ExternalBlockLoader {
 		for (Map.Entry<String, List<Tuple<ToolboxBlock, String>>> entry : toolbox.entrySet()) {
 			StringBuilder categoryBuilderFinal = new StringBuilder();
 			for (Tuple<ToolboxBlock, String> tuple : entry.getValue()) {
-				if (tuple.x instanceof DynamicBlockLoader.DynamicToolboxBlock
-						&& !((DynamicBlockLoader.DynamicToolboxBlock) tuple.x)
-						.shouldLoad(pane.getMCreator().getGeneratorConfiguration()))
+				if (tuple.x() instanceof DynamicBlockLoader.DynamicToolboxBlock
+						&& !((DynamicBlockLoader.DynamicToolboxBlock) tuple.x()).shouldLoad(
+						pane.getMCreator().getGeneratorConfiguration()))
 					continue;
-				categoryBuilderFinal.append(tuple.y);
+				categoryBuilderFinal.append(tuple.y());
 			}
 			toolbox_xml = toolbox_xml.replace("<custom-" + entry.getKey() + "/>", categoryBuilderFinal.toString());
 		}

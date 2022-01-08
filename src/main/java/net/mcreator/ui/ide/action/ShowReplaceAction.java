@@ -30,15 +30,14 @@ public class ShowReplaceAction extends BasicAction {
 	public ShowReplaceAction(ActionRegistry actionRegistry) {
 		super(actionRegistry, L10N.t("action.ide.replace_in_code"), actionEvent -> {
 			JPanel pan = actionRegistry.getMCreator().mcreatorTabs.getCurrentTab().getContent();
-			if (pan instanceof CodeEditorView) {
-				CodeEditorView codeEditorView = (CodeEditorView) pan;
+			if (pan instanceof CodeEditorView codeEditorView) {
 				codeEditorView.sed.setVisible(false);
 				codeEditorView.rep.setVisible(true);
 				codeEditorView.disableJumpToMode();
 			}
 		});
-		actionRegistry.getMCreator().mcreatorTabs
-				.addTabShownListener(tab -> setEnabled(tab.getContent() instanceof CodeEditorView));
+		actionRegistry.getMCreator().mcreatorTabs.addTabShownListener(
+				tab -> setEnabled(tab.getContent() instanceof CodeEditorView));
 	}
 
 }

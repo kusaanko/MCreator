@@ -40,8 +40,8 @@ import net.mcreator.ui.laf.SlickDarkScrollBarUI;
 import net.mcreator.ui.laf.SlickTreeUI;
 import net.mcreator.ui.laf.renderer.AstTreeCellRendererCustom;
 import net.mcreator.ui.views.ViewBase;
+import net.mcreator.util.FilenameUtilsPatched;
 import net.mcreator.workspace.elements.ModElement;
-import org.apache.commons.io.FilenameUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.fife.rsta.ac.AbstractSourceTree;
@@ -126,7 +126,7 @@ public class CodeEditorView extends ViewBase {
 		this(fa, FileIO.readFileToString(fs), fs.getName(), fs, false);
 	}
 
-	CodeEditorView(MCreator fa, String code, String fileName, File fileWorkingOn, boolean readOnly) {
+	public CodeEditorView(MCreator fa, String code, String fileName, File fileWorkingOn, boolean readOnly) {
 		super(fa);
 
 		this.fileWorkingOn = fileWorkingOn;
@@ -166,7 +166,6 @@ public class CodeEditorView extends ViewBase {
 		te.setAutoIndentEnabled(true);
 
 		te.setTabSize(4);
-		te.setTabsEmulated(false);
 
 		ToolTipManager.sharedInstance().registerComponent(te);
 
@@ -345,7 +344,7 @@ public class CodeEditorView extends ViewBase {
 
 		if (!readOnly)
 			KeyStrokes.registerKeyStroke(KeyStroke.getKeyStroke(KeyEvent.VK_M,
-					Toolkit.getDefaultToolkit().getMenuShortcutKeyMaskEx() | InputEvent.SHIFT_DOWN_MASK, false), te,
+							Toolkit.getDefaultToolkit().getMenuShortcutKeyMaskEx() | InputEvent.SHIFT_DOWN_MASK, false), te,
 					new AbstractAction() {
 						@Override public void actionPerformed(ActionEvent actionEvent) {
 							disableJumpToMode();
@@ -429,8 +428,9 @@ public class CodeEditorView extends ViewBase {
 					if (keyEvent.getKeyCode() == KeyEvent.VK_CONTROL) {
 						te.setCursor(new Cursor(Cursor.HAND_CURSOR));
 						jumpToMode = true;
-					} else if (smartAutocomplete && !completitionInAction && jls.isAutoActivationEnabled() && Character
-							.isLetterOrDigit(keyEvent.getKeyChar()) && jcp.getAlreadyEnteredText(te).length() > 1) {
+					} else if (smartAutocomplete && !completitionInAction && jls.isAutoActivationEnabled()
+							&& Character.isLetterOrDigit(keyEvent.getKeyChar())
+							&& jcp.getAlreadyEnteredText(te).length() > 1) {
 						if (!completitionInAction) {
 							new Thread(() -> {
 								if (ac != null) {
@@ -474,21 +474,20 @@ public class CodeEditorView extends ViewBase {
 				@Override public void mouseClicked(MouseEvent mouseEvent) {
 					CodeEditorView.this.mouseEvent = mouseEvent;
 					if (jumpToMode && ac != null) {
-						DeclarationFinder.InClassPosition position = DeclarationFinder
-								.getDeclarationOnPos(mcreator.getWorkspace(), parser, te, jls.getJarManager());
+						DeclarationFinder.InClassPosition position = DeclarationFinder.getDeclarationOnPos(
+								mcreator.getWorkspace(), parser, te, jls.getJarManager());
 						if (position != null) {
 							if (position.classFileNode == null) {
 								te.setCaretPosition(position.carret);
 								SwingUtilities.invokeLater(() -> centerLineInScrollPane());
 							} else {
-								ProjectFileOpener
-										.openFileSpecific(mcreator, position.classFileNode, position.openInReadOnly,
-												position.carret, position.virtualFile);
+								ProjectFileOpener.openFileSpecific(mcreator, position.classFileNode,
+										position.openInReadOnly, position.carret, position.virtualFile);
 							}
 							disableJumpToMode();
 						} else {
-							new FocusableTip(te, null)
-									.toolTipRequested(mouseEvent, L10N.t("ide.errors.failed_find_declaration"));
+							new FocusableTip(te, null).toolTipRequested(mouseEvent,
+									L10N.t("ide.errors.failed_find_declaration"));
 						}
 					}
 					jumpToMode = false;
@@ -501,7 +500,12 @@ public class CodeEditorView extends ViewBase {
 				te.setSyntaxEditingStyle("text/mcfunction");
 			});
 		} else if (fileName.endsWith(".info") || fileName.endsWith(".json") || fileName.endsWith(".mcmeta")) {
-			SwingUtilities.invokeLater(() -> te.setSyntaxEditingStyle(SyntaxConstants.SYNTAX_STYLE_JSON));
+			SwingUtilities.invokeLater(() -> {
+				try {
+					te.setSyntaxEditingStyle(SyntaxConstants.SYNTAX_STYLE_JSON);
+				} catch (Exception ignored) {
+				}
+			});
 		} else if (fileName.endsWith(".xml")) {
 			SwingUtilities.invokeLater(() -> te.setSyntaxEditingStyle(SyntaxConstants.SYNTAX_STYLE_XML));
 		} else if (fileName.endsWith(".lang")) {
@@ -516,8 +520,8 @@ public class CodeEditorView extends ViewBase {
 			JavaScriptLanguageSupport javaScriptLanguageSupport = new JavaScriptLanguageSupport();
 
 			javaScriptLanguageSupport.setAutoCompleteEnabled(PreferencesManager.PREFERENCES.ide.autocomplete);
-			javaScriptLanguageSupport
-					.setAutoActivationEnabled(!PreferencesManager.PREFERENCES.ide.autocompleteMode.equals("Manual"));
+			javaScriptLanguageSupport.setAutoActivationEnabled(
+					!PreferencesManager.PREFERENCES.ide.autocompleteMode.equals("Manual"));
 			javaScriptLanguageSupport.setParameterAssistanceEnabled(true);
 			javaScriptLanguageSupport.setShowDescWindow(PreferencesManager.PREFERENCES.ide.autocompleteDocWindow);
 
@@ -536,6 +540,10 @@ public class CodeEditorView extends ViewBase {
 		ro.setText(notice);
 		ro.setBackground(color);
 		ro.setVisible(true);
+	}
+
+	public void hideNotice() {
+		ro.setVisible(false);
 	}
 
 	public void disableJumpToMode() {
@@ -678,7 +686,7 @@ public class CodeEditorView extends ViewBase {
 				Object[] options = { L10N.t("ide.action.close_and_save"), L10N.t("common.close"),
 						UIManager.getString("OptionPane.cancelButtonText") };
 				int res = JOptionPane.showOptionDialog(mcreator, L10N.t("ide.warnings.file_not_saved",
-						((CodeEditorView) tab.getContent()).fileWorkingOn.getName()), L10N.t("common.warning"),
+								((CodeEditorView) tab.getContent()).fileWorkingOn.getName()), L10N.t("common.warning"),
 						JOptionPane.YES_NO_CANCEL_OPTION, JOptionPane.WARNING_MESSAGE, null, options, options[0]);
 				if (res == 0) {
 					((CodeEditorView) tab.getContent()).saveCode();
@@ -711,6 +719,10 @@ public class CodeEditorView extends ViewBase {
 		return (ViewBase) existing.getContent();
 	}
 
+	public CodeCleanup getCodeCleanup() {
+		return codeCleanup;
+	}
+
 	@Override public String getViewName() {
 		return fileWorkingOn.getName();
 	}
@@ -720,9 +732,9 @@ public class CodeEditorView extends ViewBase {
 	}
 
 	public static boolean isFileSupported(String fileName) {
-		return Arrays
-				.asList("java", "info", "txt", "json", "mcmeta", "lang", "gradle", "ini", "conf", "xml", "properties",
-						"mcfunction", "toml", "js", "yaml", "yml", "md").contains(FilenameUtils.getExtension(fileName));
+		return Arrays.asList("java", "info", "txt", "json", "mcmeta", "lang", "gradle", "ini", "conf", "xml",
+						"properties", "mcfunction", "toml", "js", "yaml", "yml", "md", "cfg")
+				.contains(FilenameUtilsPatched.getExtension(fileName));
 	}
 
 	public void jumpToLine(int linenum) {

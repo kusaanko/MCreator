@@ -42,7 +42,7 @@ public abstract class GeneratableElement {
 
 	private transient ModElement element;
 
-	public static final transient int formatVersion = 23;
+	public static final transient int formatVersion = 25;
 
 	public GeneratableElement(ModElement element) {
 		if (element != null)
@@ -103,19 +103,15 @@ public abstract class GeneratableElement {
 				JsonDeserializationContext jsonDeserializationContext) throws JsonParseException {
 			String newType = jsonElement.getAsJsonObject().get("_type").getAsString();
 			switch (newType) {
-			case "gun":
-				newType = "rangeditem";
-				break;
-			case "mob":
-				newType = "livingentity";
-				break;
+			case "gun" -> newType = "rangeditem";
+			case "mob" -> newType = "livingentity";
 			}
 
 			try {
 				ModElementType<?> modElementType = ModElementTypeLoader.getModElementType(newType);
 
-				int importedFormatVersion = jsonDeserializationContext
-						.deserialize(jsonElement.getAsJsonObject().get("_fv"), Integer.class);
+				int importedFormatVersion = jsonDeserializationContext.deserialize(
+						jsonElement.getAsJsonObject().get("_fv"), Integer.class);
 
 				final GeneratableElement[] generatableElement = {
 						gson.fromJson(jsonElement.getAsJsonObject().get("definition"),
@@ -130,12 +126,12 @@ public abstract class GeneratableElement {
 						converters.stream()
 								.filter(converter -> importedFormatVersion < converter.getVersionConvertingTo())
 								.sorted().forEach(converter -> {
-							LOG.debug("Converting mod element " + this.lastModElement.getName() + " (" + modElementType
-									+ ") from FV" + importedFormatVersion + " to FV" + converter
-									.getVersionConvertingTo());
-							generatableElement[0] = converter
-									.convert(this.workspace, generatableElement[0], jsonElement);
-						});
+									LOG.debug("Converting mod element " + this.lastModElement.getName() + " (" + modElementType
+											+ ") from FV" + importedFormatVersion + " to FV"
+											+ converter.getVersionConvertingTo());
+									generatableElement[0] = converter.convert(this.workspace, generatableElement[0],
+											jsonElement);
+								});
 					}
 				}
 

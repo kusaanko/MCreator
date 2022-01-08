@@ -126,7 +126,9 @@ public final class MCreator extends JFrame implements IWorkspaceProvider, IGener
 		setLayout(new BorderLayout(0, 0));
 
 		Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
-		if (screenSize.getWidth() > 1574 && screenSize.getHeight() > 970)
+		if (screenSize.getWidth() > 2140 && screenSize.getHeight() > 1250)
+			setSize(2140, 1250);
+		else if (screenSize.getWidth() > 1574 && screenSize.getHeight() > 970)
 			setSize(1574, 967);
 		else if (screenSize.getWidth() > 1290 && screenSize.getHeight() > 795)
 			setSize(1290, 791);
@@ -185,8 +187,8 @@ public final class MCreator extends JFrame implements IWorkspaceProvider, IGener
 			float avg = ImageUtils.getAverageLuminance(ImageUtils.toBufferedImage(bgimage));
 			if (avg > 0.15) {
 				avg = (float) Math.min(avg * 1.7, 0.85);
-				bgimage = ImageUtils.drawOver(new ImageIcon(bgimage), new ImageIcon(ImageUtils
-						.emptyImageWithSize(bgimage.getWidth(this), bgimage.getHeight(this),
+				bgimage = ImageUtils.drawOver(new ImageIcon(bgimage), new ImageIcon(
+						ImageUtils.emptyImageWithSize(bgimage.getWidth(this), bgimage.getHeight(this),
 								new Color(0.12f, 0.12f, 0.12f, avg)))).getImage();
 			}
 		}
@@ -288,8 +290,8 @@ public final class MCreator extends JFrame implements IWorkspaceProvider, IGener
 
 			// if we need to setup MCreator, we do so
 			if (WorkspaceGeneratorSetup.shouldSetupBeRan(workspace.getGenerator())) {
-				WorkspaceGeneratorSetupDialog
-						.runSetup(this, PreferencesManager.PREFERENCES.notifications.openWhatsNextPage);
+				WorkspaceGeneratorSetupDialog.runSetup(this,
+						PreferencesManager.PREFERENCES.notifications.openWhatsNextPage);
 			}
 
 			if (workspace.getMCreatorVersion()
@@ -325,7 +327,7 @@ public final class MCreator extends JFrame implements IWorkspaceProvider, IGener
 		return statusBar;
 	}
 
-	public final boolean closeThisMCreator(boolean returnToProjectSelector) {
+	public boolean closeThisMCreator(boolean returnToProjectSelector) {
 		boolean safetoexit = gradleConsole.getStatus() != GradleConsole.RUNNING;
 		if (!safetoexit) {
 			if (gradleConsole.isGradleSetupTaskRunning()) {
@@ -334,10 +336,10 @@ public final class MCreator extends JFrame implements IWorkspaceProvider, IGener
 				return false;
 			}
 
-			int reply = JOptionPane
-					.showConfirmDialog(this, L10N.t("action.gradle.close_mcreator_while_running_message"),
-							L10N.t("action.gradle.close_mcreator_while_running_title"), JOptionPane.YES_NO_OPTION,
-							JOptionPane.WARNING_MESSAGE, null);
+			int reply = JOptionPane.showConfirmDialog(this,
+					L10N.t("action.gradle.close_mcreator_while_running_message"),
+					L10N.t("action.gradle.close_mcreator_while_running_title"), JOptionPane.YES_NO_OPTION,
+					JOptionPane.WARNING_MESSAGE, null);
 			if (reply == JOptionPane.YES_OPTION) {
 				safetoexit = true;
 				gradleConsole.cancelTask();
@@ -348,8 +350,7 @@ public final class MCreator extends JFrame implements IWorkspaceProvider, IGener
 			LOG.info("Closing MCreator window ...");
 			PreferencesManager.PREFERENCES.hidden.fullScreen = getExtendedState() == MAXIMIZED_BOTH;
 			if (splitPane != null)
-				PreferencesManager.PREFERENCES.hidden.projectTreeSplitPos = splitPane
-						.getDividerLocation(); // this one could be stored per workspace in the future
+				PreferencesManager.PREFERENCES.hidden.projectTreeSplitPos = splitPane.getDividerLocation(); // this one could be stored per workspace in the future
 
 			workspace.close();
 
@@ -390,8 +391,7 @@ public final class MCreator extends JFrame implements IWorkspaceProvider, IGener
 	}
 
 	@Override public boolean equals(Object mcreator) {
-		if (mcreator instanceof MCreator) {
-			MCreator theothermcreator = (MCreator) mcreator;
+		if (mcreator instanceof MCreator theothermcreator) {
 			if (theothermcreator.workspace != null && workspace != null)
 				return theothermcreator.workspace.getFileManager().getWorkspaceFile()
 						.equals(workspace.getFileManager().getWorkspaceFile());

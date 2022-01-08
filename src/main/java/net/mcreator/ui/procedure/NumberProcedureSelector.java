@@ -18,7 +18,6 @@
 
 package net.mcreator.ui.procedure;
 
-import net.mcreator.blockly.BlocklyBlockUtil;
 import net.mcreator.blockly.data.Dependency;
 import net.mcreator.element.ModElementType;
 import net.mcreator.element.parts.NumberProcedure;
@@ -77,8 +76,7 @@ public class NumberProcedureSelector extends AbstractProcedureSelector {
 		setBorder(BorderFactory.createEmptyBorder(0, 2, 0, 2));
 
 		setOpaque(true);
-		procedures.setBorder(
-				BorderFactory.createLineBorder(BlocklyBlockUtil.getBlockColorFromHUE(returnType.getColor())));
+		procedures.setBorder(BorderFactory.createLineBorder(returnType.getBlocklyColor()));
 		setBackground((Color) UIManager.get("MCreatorLAF.LIGHT_ACCENT"));
 
 		procedures.setRenderer(new ConditionalComboBoxRenderer());
@@ -141,15 +139,15 @@ public class NumberProcedureSelector extends AbstractProcedureSelector {
 				for (String part : parts) {
 					procedureName.append(StringUtils.uppercaseFirstLetter(part));
 				}
-				procedureNameString = JavaConventions
-						.convertToValidClassName(procedureName.toString().replace("When", ""));
+				procedureNameString = JavaConventions.convertToValidClassName(
+						procedureName.toString().replace("When", ""));
 			}
 
 			procedureNameString = VOptionPane.showInputDialog(mcreator, L10N.t("action.procedure.enter_procedure_name"),
 					L10N.t("action.procedure.new_procedure_dialog_title"), null, new OptionPaneValidatior() {
 						@Override public ValidationResult validate(JComponent component) {
-							return new ModElementNameValidator(mcreator.getWorkspace(), (VTextField) component)
-									.validate();
+							return new ModElementNameValidator(mcreator.getWorkspace(),
+									(VTextField) component).validate();
 						}
 					}, L10N.t("action.procedure.create_procedure"), UIManager.getString("OptionPane.cancelButtonText"),
 					procedureNameString);
@@ -161,8 +159,8 @@ public class NumberProcedureSelector extends AbstractProcedureSelector {
 				if (newGUI != null) {
 					newGUI.showView();
 					newGUI.setModElementCreatedListener(generatableElement -> {
-						String modName = JavaConventions
-								.convertToValidClassName(generatableElement.getModElement().getName());
+						String modName = JavaConventions.convertToValidClassName(
+								generatableElement.getModElement().getName());
 						refreshList();
 						setSelectedProcedure(modName);
 					});
@@ -188,12 +186,12 @@ public class NumberProcedureSelector extends AbstractProcedureSelector {
 		});
 
 		if (fixedValue != null)
-			add("East", PanelUtils.totalCenterInPanel(PanelUtils
-					.join(FlowLayout.LEFT, 0, 1, PanelUtils.westAndEastElement(procedures, fixedValue),
+			add("East", PanelUtils.totalCenterInPanel(
+					PanelUtils.join(FlowLayout.LEFT, 0, 1, PanelUtils.westAndEastElement(procedures, fixedValue),
 							new JEmptyBox(1, 1), PanelUtils.gridElements(1, 2, add, edit))));
 		else
-			add("East", PanelUtils.totalCenterInPanel(PanelUtils
-					.join(FlowLayout.LEFT, 0, 1, procedures, new JEmptyBox(1, 1),
+			add("East", PanelUtils.totalCenterInPanel(
+					PanelUtils.join(FlowLayout.LEFT, 0, 1, procedures, new JEmptyBox(1, 1),
 							PanelUtils.gridElements(1, 2, add, edit))));
 
 		add("West", PanelUtils.join(FlowLayout.LEFT, 4, 4, top));

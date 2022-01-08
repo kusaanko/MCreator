@@ -21,6 +21,7 @@ package net.mcreator.element.parts;
 import net.mcreator.blockly.data.Dependency;
 import net.mcreator.element.GeneratableElement;
 import net.mcreator.workspace.Workspace;
+import net.mcreator.workspace.elements.ModElement;
 
 import javax.annotation.Nullable;
 import java.lang.reflect.Field;
@@ -30,7 +31,7 @@ import java.util.List;
 
 @SuppressWarnings("unused") public class Procedure {
 
-	private String name;
+	private final String name;
 
 	public transient boolean exists = false;
 
@@ -43,27 +44,30 @@ import java.util.List;
 	}
 
 	public List<Dependency> getDependencies(Workspace workspace) {
-		GeneratableElement generatableElement = workspace.getModElementByName(name).getGeneratableElement();
-		if (generatableElement instanceof net.mcreator.element.types.Procedure) {
-			this.exists = true;
-			return ((net.mcreator.element.types.Procedure) generatableElement).getDependencies();
+		ModElement modElement = workspace.getModElementByName(name);
+		if (modElement != null) {
+			GeneratableElement generatableElement = modElement.getGeneratableElement();
+			if (generatableElement instanceof net.mcreator.element.types.Procedure) {
+				this.exists = true;
+				return ((net.mcreator.element.types.Procedure) generatableElement).getDependencies();
+			}
 		}
 
 		this.exists = false;
 		return Collections.emptyList();
 	}
 
-	public boolean hasReturnValue(Workspace workspace) {
+	public String getReturnValueType(Workspace workspace) {
 		GeneratableElement generatableElement = workspace.getModElementByName(name).getGeneratableElement();
 		if (generatableElement instanceof net.mcreator.element.types.Procedure) {
 			try {
-				return ((net.mcreator.element.types.Procedure) generatableElement)
-						.getBlocklyToProcedure(new HashMap<>()).getReturnType() != null;
+				return ((net.mcreator.element.types.Procedure) generatableElement).getBlocklyToProcedure(
+						new HashMap<>()).getReturnType().getName();
 			} catch (Exception ignored) {
 			}
 		}
 
-		return false;
+		return "none";
 	}
 
 	public static boolean isElementUsingProcedure(Object element, String procedureName) {
@@ -73,11 +77,11 @@ import java.util.List;
 			field.setAccessible(true);
 			try {
 				Object value = field.get(element);
-				if (value instanceof Procedure) {
-					if (((Procedure) value).getName() == null)
+				if (value instanceof net.mcreator.element.parts.Procedure) {
+					if (((net.mcreator.element.parts.Procedure) value).name == null)
 						continue;
 
-					if (((Procedure) value).getName().equals(procedureName)) {
+					if (((net.mcreator.element.parts.Procedure) value).name.equals(procedureName)) {
 						isCallingThisProcedure = true;
 						break;
 					}

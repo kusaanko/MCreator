@@ -96,7 +96,7 @@ public class FoodGUI extends ModElementGUI<Food> {
 	private final DataListComboBox creativeTab = new DataListComboBox(mcreator);
 
 	private final Model normal = new Model.BuiltInModel("Normal");
-	private final SearchableComboBox<Model> renderType = new SearchableComboBox<>();
+	private final SearchableComboBox<Model> renderType = new SearchableComboBox<>(new Model[] { normal });
 
 	public FoodGUI(MCreator mcreator, ModElement modElement, boolean editingMode) {
 		super(mcreator, modElement, editingMode);
@@ -111,8 +111,7 @@ public class FoodGUI extends ModElementGUI<Food> {
 		onRightClickedOnBlock = new ProcedureSelector(this.withEntry("item/when_right_clicked_block"), mcreator,
 				L10N.t("elementgui.common.event_right_clicked_block"), VariableTypeLoader.BuiltInTypes.ACTIONRESULTTYPE,
 				Dependency.fromString(
-						"x:number/y:number/z:number/world:world/entity:entity/itemstack:itemstack/direction:direction/blockstate:blockstate"))
-				.makeReturnValueOptional();
+						"x:number/y:number/z:number/world:world/entity:entity/itemstack:itemstack/direction:direction/blockstate:blockstate")).makeReturnValueOptional();
 		onEaten = new ProcedureSelector(this.withEntry("food/when_eaten"), mcreator,
 				L10N.t("elementgui.food.event_on_eaten"),
 				Dependency.fromString("x:number/y:number/z:number/world:world/entity:entity"));
@@ -120,11 +119,11 @@ public class FoodGUI extends ModElementGUI<Food> {
 				L10N.t("elementgui.item.event_entity_hit"), Dependency.fromString(
 				"x:number/y:number/z:number/world:world/entity:entity/sourceentity:entity/itemstack:itemstack"));
 		onItemInInventoryTick = new ProcedureSelector(this.withEntry("item/inventory_tick"), mcreator,
-				L10N.t("elementgui.item.event_inventory_tick"), Dependency
-				.fromString("x:number/y:number/z:number/world:world/entity:entity/itemstack:itemstack/slot:number"));
+				L10N.t("elementgui.item.event_inventory_tick"), Dependency.fromString(
+				"x:number/y:number/z:number/world:world/entity:entity/itemstack:itemstack/slot:number"));
 		onItemInUseTick = new ProcedureSelector(this.withEntry("item/hand_tick"), mcreator,
-				L10N.t("elementgui.item.event_hand_tick"), Dependency
-				.fromString("x:number/y:number/z:number/world:world/entity:entity/itemstack:itemstack/slot:number"));
+				L10N.t("elementgui.item.event_hand_tick"), Dependency.fromString(
+				"x:number/y:number/z:number/world:world/entity:entity/itemstack:itemstack/slot:number"));
 		onCrafted = new ProcedureSelector(this.withEntry("item/on_crafted"), mcreator,
 				L10N.t("elementgui.common.event_on_crafted"),
 				Dependency.fromString("x:number/y:number/z:number/world:world/entity:entity/itemstack:itemstack"));
@@ -136,9 +135,8 @@ public class FoodGUI extends ModElementGUI<Food> {
 				Dependency.fromString("x:number/y:number/z:number/world:world/entity:entity/itemstack:itemstack"));
 		glowCondition = new ProcedureSelector(this.withEntry("item/condition_glow"), mcreator,
 				L10N.t("elementgui.food.event_make_glow"), ProcedureSelector.Side.CLIENT, true,
-				VariableTypeLoader.BuiltInTypes.LOGIC,
-				Dependency.fromString("x:number/y:number/z:number/world:world/entity:entity/itemstack:itemstack"))
-				.makeInline();
+				VariableTypeLoader.BuiltInTypes.LOGIC, Dependency.fromString(
+				"x:number/y:number/z:number/world:world/entity:entity/itemstack:itemstack")).makeInline();
 
 		animation.setRenderer(new ItemTexturesComboBoxRenderer());
 
@@ -163,28 +161,28 @@ public class FoodGUI extends ModElementGUI<Food> {
 		JPanel rent = new JPanel();
 		rent.setLayout(new BoxLayout(rent, BoxLayout.PAGE_AXIS));
 		rent.setOpaque(false);
-		rent.add(PanelUtils.join(HelpUtils
-						.wrapWithHelpButton(this.withEntry("item/model"), L10N.label("elementgui.common.item_model")),
+		rent.add(PanelUtils.join(
+				HelpUtils.wrapWithHelpButton(this.withEntry("item/model"), L10N.label("elementgui.common.item_model")),
 				PanelUtils.join(renderType)));
 		renderType.setFont(renderType.getFont().deriveFont(16.0f));
 		renderType.setPreferredSize(new Dimension(350, 42));
 		renderType.setRenderer(new ModelComboBoxRenderer());
 		rent.setBorder(BorderFactory.createTitledBorder(
-				BorderFactory.createLineBorder((Color) UIManager.get("MCreatorLAF.BRIGHT_COLOR"), 2),
+				BorderFactory.createLineBorder((Color) UIManager.get("MCreatorLAF.BRIGHT_COLOR"), 1),
 				L10N.t("elementgui.food.food_3d_model"), 0, 0, getFont().deriveFont(12.0f),
 				(Color) UIManager.get("MCreatorLAF.BRIGHT_COLOR")));
 
-		JComponent glow = PanelUtils.join(FlowLayout.LEFT, HelpUtils
-				.wrapWithHelpButton(this.withEntry("item/glowing_effect"),
+		JComponent glow = PanelUtils.join(FlowLayout.LEFT,
+				HelpUtils.wrapWithHelpButton(this.withEntry("item/glowing_effect"),
 						L10N.label("elementgui.food.enable_glowing")), hasGlow, glowCondition);
 
-		JComponent visualBottom = PanelUtils.centerAndSouthElement(PanelUtils.gridElements(1, 2, HelpUtils
-				.wrapWithHelpButton(this.withEntry("item/special_information"),
+		JComponent visualBottom = PanelUtils.centerAndSouthElement(PanelUtils.gridElements(1, 2,
+				HelpUtils.wrapWithHelpButton(this.withEntry("item/special_information"),
 						L10N.label("elementgui.food.tooltip_tip")), specialInfo), glow, 10, 10);
 
 		pane2.setOpaque(false);
-		pane2.add("Center", PanelUtils
-				.totalCenterInPanel(PanelUtils.northAndCenterElement(PanelUtils.join(destal, rent), visualBottom)));
+		pane2.add("Center", PanelUtils.totalCenterInPanel(
+				PanelUtils.northAndCenterElement(PanelUtils.join(destal, rent), visualBottom)));
 
 		JPanel selp = new JPanel(new GridLayout(11, 2, 50, 2));
 		selp.setOpaque(false);
@@ -198,8 +196,8 @@ public class FoodGUI extends ModElementGUI<Food> {
 		nutritionalValue.setOpaque(false);
 		saturation.setOpaque(false);
 
-		selp.add(HelpUtils
-				.wrapWithHelpButton(this.withEntry("common/gui_name"), L10N.label("elementgui.common.name_in_gui")));
+		selp.add(HelpUtils.wrapWithHelpButton(this.withEntry("common/gui_name"),
+				L10N.label("elementgui.common.name_in_gui")));
 		selp.add(name);
 
 		selp.add(HelpUtils.wrapWithHelpButton(this.withEntry("item/rarity"), L10N.label("elementgui.common.rarity")));
@@ -209,38 +207,38 @@ public class FoodGUI extends ModElementGUI<Food> {
 				L10N.label("elementgui.common.creative_tab")));
 		selp.add(creativeTab);
 
-		selp.add(HelpUtils
-				.wrapWithHelpButton(this.withEntry("item/stack_size"), L10N.label("elementgui.common.stack_size")));
+		selp.add(HelpUtils.wrapWithHelpButton(this.withEntry("item/stack_size"),
+				L10N.label("elementgui.common.stack_size")));
 		selp.add(stackSize);
 
 		selp.add(HelpUtils.wrapWithHelpButton(this.withEntry("food/nutritional_value"),
 				L10N.label("elementgui.food.nutritional_value")));
 		selp.add(nutritionalValue);
 
-		selp.add(HelpUtils
-				.wrapWithHelpButton(this.withEntry("food/saturation"), L10N.label("elementgui.food.saturation")));
+		selp.add(HelpUtils.wrapWithHelpButton(this.withEntry("food/saturation"),
+				L10N.label("elementgui.food.saturation")));
 		selp.add(saturation);
 
-		selp.add(HelpUtils
-				.wrapWithHelpButton(this.withEntry("food/result_item"), L10N.label("elementgui.food.eating_result")));
+		selp.add(HelpUtils.wrapWithHelpButton(this.withEntry("food/result_item"),
+				L10N.label("elementgui.food.eating_result")));
 		selp.add(PanelUtils.centerInPanel(resultItem));
 
-		selp.add(HelpUtils
-				.wrapWithHelpButton(this.withEntry("food/is_for_dogs"), L10N.label("elementgui.food.is_meat")));
+		selp.add(HelpUtils.wrapWithHelpButton(this.withEntry("food/is_for_dogs"),
+				L10N.label("elementgui.food.is_meat")));
 		selp.add(forDogs);
 
-		selp.add(HelpUtils
-				.wrapWithHelpButton(this.withEntry("food/always_edible"), L10N.label("elementgui.food.is_edible")));
+		selp.add(HelpUtils.wrapWithHelpButton(this.withEntry("food/always_edible"),
+				L10N.label("elementgui.food.is_edible")));
 		selp.add(isAlwaysEdible);
 
 		hasGlow.addActionListener(e -> updateGlowElements());
 
-		selp.add(HelpUtils
-				.wrapWithHelpButton(this.withEntry("food/eating_speed"), L10N.label("elementgui.food.eating_speed")));
+		selp.add(HelpUtils.wrapWithHelpButton(this.withEntry("food/eating_speed"),
+				L10N.label("elementgui.food.eating_speed")));
 		selp.add(eatingSpeed);
 
-		selp.add(HelpUtils
-				.wrapWithHelpButton(this.withEntry("item/animation"), L10N.label("elementgui.food.item_animation")));
+		selp.add(HelpUtils.wrapWithHelpButton(this.withEntry("item/animation"),
+				L10N.label("elementgui.food.item_animation")));
 		selp.add(animation);
 
 		pane4.setOpaque(false);
@@ -261,15 +259,7 @@ public class FoodGUI extends ModElementGUI<Food> {
 		events.add(onDroppedByPlayer);
 		events.setOpaque(false);
 
-		JPanel wrap = new JPanel();
-		wrap.setOpaque(false);
-		wrap.add(events);
-		wrap.setBorder(BorderFactory.createTitledBorder(
-				BorderFactory.createLineBorder((Color) UIManager.get("MCreatorLAF.BRIGHT_COLOR"), 1),
-				L10N.t("elementgui.food.events"), 0, 0, getFont().deriveFont(12.0f),
-				(Color) UIManager.get("MCreatorLAF.BRIGHT_COLOR")));
-
-		pane1.add("Center", PanelUtils.totalCenterInPanel(wrap));
+		pane1.add("Center", PanelUtils.totalCenterInPanel(events));
 
 		texture.setValidator(new TileHolderValidator(texture));
 		name.setValidator(new TextFieldValidator(name, L10N.t("elementgui.food.error_needs_name")));
@@ -380,13 +370,13 @@ public class FoodGUI extends ModElementGUI<Food> {
 		food.specialInfo = StringUtils.splitCommaSeparatedStringListWithEscapes(specialInfo.getText());
 		food.resultItem = resultItem.getBlock();
 
-		Model.Type modelType = ((Model) Objects.requireNonNull(renderType.getSelectedItem())).getType();
+		Model.Type modelType = Objects.requireNonNull(renderType.getSelectedItem()).getType();
 		food.renderType = 0;
 		if (modelType == Model.Type.JSON)
 			food.renderType = 1;
 		else if (modelType == Model.Type.OBJ)
 			food.renderType = 2;
-		food.customModelName = ((Model) Objects.requireNonNull(renderType.getSelectedItem())).getReadableName();
+		food.customModelName = Objects.requireNonNull(renderType.getSelectedItem()).getReadableName();
 		return food;
 	}
 

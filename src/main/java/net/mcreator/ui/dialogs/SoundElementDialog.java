@@ -27,8 +27,8 @@ import net.mcreator.ui.init.L10N;
 import net.mcreator.ui.validation.Validator;
 import net.mcreator.ui.validation.component.VTextField;
 import net.mcreator.ui.validation.validators.ResourceNameValidator;
+import net.mcreator.util.FilenameUtilsPatched;
 import net.mcreator.workspace.elements.SoundElement;
-import org.apache.commons.io.FilenameUtils;
 
 import javax.annotation.Nullable;
 import javax.swing.*;
@@ -60,7 +60,7 @@ public class SoundElementDialog {
 							.collect(Collectors.toList()));
 		}
 
-		JComboBox<String> soundCategory = new JComboBox<>(ElementUtil.getAllSoundCategories());
+		JComboBox<String> soundCategory = new JComboBox<>(ElementUtil.getDataListAsStringArray("soundcategories"));
 
 		ui.add(L10N.label("dialog.sounds.registry_name"));
 		ui.add(soundName);
@@ -84,11 +84,10 @@ public class SoundElementDialog {
 			subtitle.setText(element.getSubtitle());
 		}
 
-		int option = JOptionPane
-				.showOptionDialog(mcreator, ui, L10N.t("dialog.sounds.edit"), JOptionPane.DEFAULT_OPTION,
-						JOptionPane.QUESTION_MESSAGE, null,
-						element != null ? new String[] { "Save changes" } : new String[] { "Add sound", "Cancel" },
-						element != null ? "Save changes" : "Add sound");
+		int option = JOptionPane.showOptionDialog(mcreator, ui, L10N.t("dialog.sounds.edit"),
+				JOptionPane.DEFAULT_OPTION, JOptionPane.QUESTION_MESSAGE, null,
+				element != null ? new String[] { "Save changes" } : new String[] { "Add sound", "Cancel" },
+				element != null ? "Save changes" : "Add sound");
 
 		if (option == 0) {
 			if (soundName.getValidationStatus().getValidationResultType() == Validator.ValidationResultType.ERROR) {
@@ -107,7 +106,7 @@ public class SoundElementDialog {
 						fileListField.getListElements().forEach(file -> {
 							String fileName = RegistryNameFixer.fix(file.getName());
 							FileIO.copyFile(file, new File(mcreator.getFolderManager().getSoundsDir(), fileName));
-							fileNames.add(FilenameUtils.removeExtension(fileName));
+							fileNames.add(FilenameUtilsPatched.removeExtension(fileName));
 						});
 
 						String registryname = RegistryNameFixer.fix(soundName.getText());

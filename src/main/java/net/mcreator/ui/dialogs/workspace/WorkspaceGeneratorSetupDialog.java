@@ -34,7 +34,6 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.datatransfer.StringSelection;
 import java.io.IOException;
-import java.util.concurrent.TimeoutException;
 import java.util.concurrent.atomic.AtomicBoolean;
 
 public class WorkspaceGeneratorSetupDialog {
@@ -66,7 +65,7 @@ public class WorkspaceGeneratorSetupDialog {
 				try {
 					GradleDaemonUtils.stopAllDaemons(m.getWorkspace());
 					p20.ok();
-				} catch (IOException | TimeoutException | InterruptedException e) {
+				} catch (IOException | InterruptedException e) {
 					LOG.warn("Failed to stop Gradle daemons", e);
 					p20.warn();
 				}
@@ -80,7 +79,7 @@ public class WorkspaceGeneratorSetupDialog {
 
 				m.getGradleConsole().exec(m.getGeneratorConfiguration().getGradleTaskFor("setup_task"), taskResult -> {
 					m.getGradleConsole().setGradleSetupTaskRunningFlag(false);
-					if (taskResult.getStatusByMCreator() == GradleErrorCodes.STATUS_OK) {
+					if (taskResult.statusByMCreator() == GradleErrorCodes.STATUS_OK) {
 						p2.ok();
 						dial.refreshDisplay();
 

@@ -43,7 +43,7 @@ public class ModElementTypeLoader {
 				new ModElementType<>("command", 'c', BaseType.COMMAND, RecipeType.NONE, CommandGUI::new,
 						Command.class));
 		ModElementType.DIMENSION = register(
-				new ModElementType<>("dimension", 'd', BaseType.DATAPACK, RecipeType.ITEM, DimensionGUI::new,
+				new ModElementType<>("dimension", 'd', BaseType.DIMENSION, RecipeType.ITEM, DimensionGUI::new,
 						Dimension.class));
 		ModElementType.CODE = register(
 				new ModElementType<>("code", null, BaseType.OTHER, RecipeType.NONE, CustomElementGUI::new,
@@ -56,19 +56,19 @@ public class ModElementTypeLoader {
 		ModElementType.FOOD = register(
 				new ModElementType<>("food", 'f', BaseType.ITEM, RecipeType.ITEM, FoodGUI::new, Food.class));
 		ModElementType.FUEL = register(
-				new ModElementType<>("fuel", '1', BaseType.FUEL, RecipeType.NONE, FuelGUI::new, Fuel.class));
+				new ModElementType<>("fuel", null, BaseType.FUEL, RecipeType.NONE, FuelGUI::new, Fuel.class));
 		ModElementType.FUNCTION = register(
-				new ModElementType<>("function", '2', BaseType.DATAPACK, RecipeType.NONE, FunctionGUI::new,
+				new ModElementType<>("function", null, BaseType.DATAPACK, RecipeType.NONE, FunctionGUI::new,
 						Function.class));
 		ModElementType.GAMERULE = register(
-				new ModElementType<>("gamerule", '3', BaseType.OTHER, RecipeType.NONE, GameRuleGUI::new,
+				new ModElementType<>("gamerule", null, BaseType.OTHER, RecipeType.NONE, GameRuleGUI::new,
 						GameRule.class));
 		ModElementType.GUI = register(
 				new ModElementType<>("gui", 'g', BaseType.GUI, RecipeType.NONE, CustomGUIGUI::new, GUI.class));
 		ModElementType.ITEM = register(
 				new ModElementType<>("item", 'i', BaseType.ITEM, RecipeType.ITEM, ItemGUI::new, Item.class));
 		ModElementType.KEYBIND = register(
-				new ModElementType<>("keybind", 'k', BaseType.KEYBIND, RecipeType.NONE, KeyBindGUI::new,
+				new ModElementType<>("keybind", 'k', BaseType.OTHER, RecipeType.NONE, KeyBindGUI::new,
 						KeyBinding.class));
 		ModElementType.LIVINGENTITY = register(
 				new ModElementType<>("livingentity", 'e', BaseType.ENTITY, RecipeType.NONE, LivingEntityGUI::new,
@@ -80,10 +80,9 @@ public class ModElementTypeLoader {
 				new ModElementType<>("musicdisc", 'x', BaseType.OTHER, RecipeType.ITEM, MusicDiscGUI::new,
 						MusicDisc.class));
 		ModElementType.OVERLAY = register(
-				new ModElementType<>("overlay", 'v', BaseType.OVERLAY, RecipeType.NONE, OverlayGUI::new,
-						Overlay.class));
+				new ModElementType<>("overlay", 'v', BaseType.OTHER, RecipeType.NONE, OverlayGUI::new, Overlay.class));
 		ModElementType.PAINTING = register(
-				new ModElementType<>("painting", '4', BaseType.OTHER, RecipeType.NONE, PaintingGUI::new,
+				new ModElementType<>("painting", null, BaseType.OTHER, RecipeType.NONE, PaintingGUI::new,
 						Painting.class));
 		ModElementType.PARTICLE = register(
 				new ModElementType<>("particle", 'y', BaseType.PARTICLE, RecipeType.NONE, ParticleGUI::new,
@@ -93,10 +92,10 @@ public class ModElementTypeLoader {
 		ModElementType.POTION = register(
 				new ModElementType<>("potion", 'z', BaseType.POTION, RecipeType.NONE, PotionGUI::new, Potion.class));
 		ModElementType.POTIONEFFECT = register(
-				new ModElementType<>("potioneffect", '5', BaseType.POTIONEFFECT, RecipeType.NONE, PotionEffectGUI::new,
+				new ModElementType<>("potioneffect", null, BaseType.POTIONEFFECT, RecipeType.NONE, PotionEffectGUI::new,
 						PotionEffect.class));
 		ModElementType.PROCEDURE = register(
-				new ModElementType<>("procedure", 'p', BaseType.PROCEDURE, RecipeType.NONE, ProcedureGUI::new,
+				new ModElementType<>("procedure", 'p', BaseType.OTHER, RecipeType.NONE, ProcedureGUI::new,
 						Procedure.class));
 		ModElementType.RANGEDITEM = register(
 				new ModElementType<>("rangeditem", 'q', BaseType.ITEM, RecipeType.ITEM, RangedItemGUI::new,
@@ -104,7 +103,7 @@ public class ModElementTypeLoader {
 		ModElementType.RECIPE = register(
 				new ModElementType<>("recipe", 'r', BaseType.DATAPACK, RecipeType.NONE, RecipeGUI::new, Recipe.class));
 		ModElementType.STRUCTURE = register(
-				new ModElementType<>("structure", 's', BaseType.STRUCTURE, RecipeType.NONE, StructureGenGUI::new,
+				new ModElementType<>("structure", 's', BaseType.FEATURE, RecipeType.NONE, StructureGenGUI::new,
 						Structure.class));
 		ModElementType.TAB = register(
 				new ModElementType<>("tab", 'w', BaseType.TAB, RecipeType.NONE, TabGUI::new, Tab.class));

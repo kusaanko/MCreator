@@ -110,7 +110,7 @@ public class RangedItemGUI extends ModElementGUI<RangedItem> {
 	private final DataListComboBox creativeTab = new DataListComboBox(mcreator);
 
 	private final Model adefault = new Model.BuiltInModel("Default");
-	private final SearchableComboBox<Model> bulletModel = new SearchableComboBox<>();
+	private final SearchableComboBox<Model> bulletModel = new SearchableComboBox<>(new Model[] { adefault });
 	private final VComboBox<String> customBulletModelTexture = new SearchableComboBox<>();
 
 	private final ValidationGroup page1group = new ValidationGroup();
@@ -132,8 +132,8 @@ public class RangedItemGUI extends ModElementGUI<RangedItem> {
 		bulletItemTexture = new MCItemHolder(mcreator, ElementUtil::loadBlocksAndItems);
 
 		onBulletHitsBlock = new ProcedureSelector(this.withEntry("rangeditem/when_bullet_hits_block"), mcreator,
-				L10N.t("elementgui.ranged_item.event_bullet_hits_block"), Dependency
-				.fromString("x:number/y:number/z:number/world:world/entity:entity/imediatesourceentity:entity"));
+				L10N.t("elementgui.ranged_item.event_bullet_hits_block"), Dependency.fromString(
+				"x:number/y:number/z:number/world:world/entity:entity/imediatesourceentity:entity"));
 		onBulletHitsPlayer = new ProcedureSelector(this.withEntry("rangeditem/when_bullet_hits_player"), mcreator,
 				L10N.t("elementgui.ranged_item.event_bullet_hits_player"), Dependency.fromString(
 				"x:number/y:number/z:number/world:world/entity:entity/sourceentity:entity/imediatesourceentity:entity"));
@@ -141,8 +141,8 @@ public class RangedItemGUI extends ModElementGUI<RangedItem> {
 				L10N.t("elementgui.ranged_item.event_bullet_hits_entity"), Dependency.fromString(
 				"x:number/y:number/z:number/world:world/entity:entity/sourceentity:entity/imediatesourceentity:entity"));
 		onBulletFlyingTick = new ProcedureSelector(this.withEntry("rangeditem/when_bullet_flying_tick"), mcreator,
-				L10N.t("elementgui.ranged_item.event_bullet_flying_tick"), Dependency
-				.fromString("x:number/y:number/z:number/world:world/entity:entity/imediatesourceentity:entity"));
+				L10N.t("elementgui.ranged_item.event_bullet_flying_tick"), Dependency.fromString(
+				"x:number/y:number/z:number/world:world/entity:entity/imediatesourceentity:entity"));
 		onRangedItemUsed = new ProcedureSelector(this.withEntry("rangeditem/when_used"), mcreator,
 				L10N.t("elementgui.ranged_item.event_on_use"),
 				Dependency.fromString("x:number/y:number/z:number/world:world/entity:entity/itemstack:itemstack"));
@@ -150,15 +150,13 @@ public class RangedItemGUI extends ModElementGUI<RangedItem> {
 				L10N.t("elementgui.ranged_item.swinged_by_entity"),
 				Dependency.fromString("x:number/y:number/z:number/world:world/entity:entity/itemstack:itemstack"));
 
-		useCondition = new ProcedureSelector(
-				this.withEntry("rangeditem/use_condition").withArguments(() -> L10N.t("condition.common.true")),
-				mcreator, L10N.t("elementgui.ranged_item.can_use"), VariableTypeLoader.BuiltInTypes.LOGIC,
+		useCondition = new ProcedureSelector(this.withEntry("rangeditem/use_condition"), mcreator,
+				L10N.t("elementgui.ranged_item.can_use"), VariableTypeLoader.BuiltInTypes.LOGIC,
 				Dependency.fromString("x:number/y:number/z:number/world:world/entity:entity/itemstack:itemstack"));
 		glowCondition = new ProcedureSelector(this.withEntry("item/condition_glow"), mcreator,
 				L10N.t("elementgui.ranged_item.make_glow"), ProcedureSelector.Side.CLIENT, true,
-				VariableTypeLoader.BuiltInTypes.LOGIC,
-				Dependency.fromString("x:number/y:number/z:number/world:world/entity:entity/itemstack:itemstack"))
-				.makeInline();
+				VariableTypeLoader.BuiltInTypes.LOGIC, Dependency.fromString(
+				"x:number/y:number/z:number/world:world/entity:entity/itemstack:itemstack")).makeInline();
 
 		customBulletModelTexture.setPrototypeDisplayValue("XXXXXXXXXXXXXXXXXXXXXXXXXX");
 
@@ -187,11 +185,11 @@ public class RangedItemGUI extends ModElementGUI<RangedItem> {
 		JPanel sbbp2 = new JPanel(new BorderLayout(0, 2));
 		sbbp2.setOpaque(false);
 
-		sbbp2.add("North", PanelUtils
-				.centerInPanel(ComponentUtils.squareAndBorder(texture, L10N.t("elementgui.ranged_item.texture"))));
+		sbbp2.add("North", PanelUtils.centerInPanel(
+				ComponentUtils.squareAndBorder(texture, L10N.t("elementgui.ranged_item.texture"))));
 
-		sbbp2.add("South", PanelUtils.westAndEastElement(HelpUtils
-				.wrapWithHelpButton(this.withEntry("item/glowing_effect"),
+		sbbp2.add("South", PanelUtils.westAndEastElement(
+				HelpUtils.wrapWithHelpButton(this.withEntry("item/glowing_effect"),
 						L10N.label("elementgui.ranged_item.enable_glowing")), PanelUtils.join(hasGlow, glowCondition)));
 
 		pane1.setOpaque(false);
@@ -215,8 +213,8 @@ public class RangedItemGUI extends ModElementGUI<RangedItem> {
 				HelpUtils.wrapWithHelpButton(this.withEntry("item/model"), L10N.label("elementgui.common.item_model")));
 		selp.add(renderType);
 
-		selp.add(HelpUtils
-				.wrapWithHelpButton(this.withEntry("common/gui_name"), L10N.label("elementgui.common.name_in_gui")));
+		selp.add(HelpUtils.wrapWithHelpButton(this.withEntry("common/gui_name"),
+				L10N.label("elementgui.common.name_in_gui")));
 		selp.add(name);
 
 		selp.add(HelpUtils.wrapWithHelpButton(this.withEntry("item/special_information"),
@@ -233,8 +231,8 @@ public class RangedItemGUI extends ModElementGUI<RangedItem> {
 				L10N.label("elementgui.ranged_item.item_animation")));
 		selp.add(animation);
 
-		selp.add(HelpUtils
-				.wrapWithHelpButton(this.withEntry("item/stack_size"), L10N.label("elementgui.common.max_stack_size")));
+		selp.add(HelpUtils.wrapWithHelpButton(this.withEntry("item/stack_size"),
+				L10N.label("elementgui.common.max_stack_size")));
 		selp.add(stackSize);
 
 		selp.add(HelpUtils.wrapWithHelpButton(this.withEntry("item/damage_vs_entity"),
@@ -431,7 +429,7 @@ public class RangedItemGUI extends ModElementGUI<RangedItem> {
 						.filter(s -> s.endsWith(".png")).collect(Collectors.toList())), "");
 
 		ComboBoxUtil.updateComboBoxContents(bulletModel, ListUtils.merge(Collections.singletonList(adefault),
-				Model.getModelsWithTextureMaps(mcreator.getWorkspace()).stream()
+				Model.getModels(mcreator.getWorkspace()).stream()
 						.filter(el -> el.getType() == Model.Type.JAVA || el.getType() == Model.Type.MCREATOR)
 						.collect(Collectors.toList())));
 
